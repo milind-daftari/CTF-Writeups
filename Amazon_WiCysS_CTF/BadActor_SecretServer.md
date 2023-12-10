@@ -1,27 +1,44 @@
-Challenges: Bad Actor and Secret Server
-Points: 100 + 200 = 300
-Category: Recon
+# Bad Actor and Secret Server Challenges
 
-![Alt text](screenshots/bass1.png)
+**Points:** 100 + 200 = 300  
+**Category:** Recon  
 
-This challenge is about recon. First, we have to find a social media account for the user "mickey_z_scott".
+## Bad Actor Challenge
 
-I searched for mickey_z_scott on https://www.idcrawl.com/u/mickey_z_scott . There I found an X (Twitter account) and the flag was in the bio. I also found a username "scottyisthebest".
+### Task
+Find a social media account for the user "mickey_z_scott".
 
-![Alt text](screenshots/bass2.png)
+![IDCrawl Search Result](screenshots/bass1.png)
 
-FLAG for Bad Actor: Amazon{0S1NT_1s_c00l}
+### Process
+1. **Search on IDCrawl:**  
+   Searched for `mickey_z_scott` on [IDCrawl](https://www.idcrawl.com/u/mickey_z_scott).
 
-Now, let's search "scottyisthebest" on github. We see a profile with a few commits.
+2. **Findings:**  
+   - Discovered a Twitter account and found the flag in the bio.
+   - Also found the username `scottyisthebest`.
+   ![Twitter Account and Flag](screenshots/bass2.png)
 
-![Alt text](screenshots/bass3.png)
+### Flag for Bad Actor
+`Amazon{0S1NT_1s_c00l}`
 
-On checking every commit, we find a link in the first commit. (https://discord.gg/VKPPBvpMcv)
+## Secret Server Challenge
 
-![Alt text](screenshots/bass4.png)
+### Task
+Search for "scottyisthebest" on GitHub.
 
-After joining the discord server, flag is in #the-secret-channel.
+### Process
+1. **GitHub Profile Search:**  
+   Found a GitHub profile with a few commits.
+   ![GitHub Profile](screenshots/bass3.png)
 
-![Alt text](screenshots/bass5.png)
+2. **Commit Analysis:**  
+   Checked every commit and discovered a link in the first commit: [https://discord.gg/VKPPBvpMcv](https://discord.gg/VKPPBvpMcv).  
+   ![First Commit Link](screenshots/bass4.png)
 
-FLAG: Amazon{Y0u_h@v3_m@st3red_0S1NT}
+3. **Joining Discord Server:**  
+   Joined the Discord server using the provided link.
+   ![Discord Server Invitation](screenshots/bass5.png)
+
+### Flag
+`Amazon{Y0u_h@v3_m@st3red_0S1NT}`
