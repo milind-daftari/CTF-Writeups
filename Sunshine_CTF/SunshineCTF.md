@@ -1,112 +1,111 @@
-SunshineCTF
+# SunshineCTF Writeup
 
-![Alt text](screenshots/sunshinectf1.png)
-
-Hosted by Hack@UCF in Orlando, Florida
+Hosted by Hack@UCF in Orlando, Florida.
 
 This document contains the writeup of three challenges which I worked on for my team.
 
--------------------------------------------------------------------------------------
+![SunshineCTF Overview](screenshots/sunshinectf1.png)
 
-Title: BeepBoop Blog
-Category: Web
-Points: 100
+---
 
-![Alt text](screenshots/beepboopblog1.png)
+## Challenge 1: BeepBoop Blog
 
-The challenge says "A few robots got together and started a blog! It's full of posts that make absolutely no sense, but a little birdie told me that one of them left a secret in their drafts. Can you find it?".
+**Category**: Web  
+**Points**: 100
 
-So first lets see what the link does.
+### Challenge Description
 
-![Alt text](screenshots/beepboopblog2.png)
+"A few robots got together and started a blog! It's full of posts that make absolutely no sense, but a little birdie told me that one of them left a secret in their drafts. Can you find it?"
 
-Here, we see that this webpage contains a lot of posts. On checking with Find, we see that there are around 1023 such posts. When we click "View All...", we get the post contents.
+![BeepBoop Blog Challenge](screenshots/beepboopblog1.png)
 
-Example:
-![Alt text](screenshots/beepboopblog3.png)
+### Investigation Process
 
-Now, the first thought that came to my mind was to check contents of all the posts to see if they contain the flag. This could be easily done with Burp, as we could see the request and then search in the content of all visible posts at once.
+1. **Exploring the Webpage**: The webpage contains about 1023 posts.
 
-On checking the source of the page, I saw that it fetches individual posts in the format /post/{post_id}.
+   ![BeepBoop Blog Posts](screenshots/beepboopblog2.png)
 
-![Alt text](screenshots/beepboopblog4.png)
+2. **Post Example**: Viewing individual posts to check their contents.
 
-So, let us access an individual post.
+   ![Post Example](screenshots/beepboopblog3.png)
 
-Example: https://beepboop.web.2023.sunshinectf.games/post/1/
+3. **Analyzing Source Code**: Found that posts are fetched individually in the format `/post/{post_id}`.
 
-Following was the result:
+   ![BeepBoop Blog Source Code](screenshots/beepboopblog4.png)
 
-![Alt text](screenshots/beepboopblog5.png)
+4. **Accessing Individual Posts**: Example - `https://beepboop.web.2023.sunshinectf.games/post/1/` revealed a property '"hidden":false'.
 
-Here, we see '"hidden":false'. Seeing this, I knew that there would be posts which are hidden and would have hidden set as True. So, to search for such posts, I used a simple python script.
+   ![Individual Post Access](screenshots/beepboopblog5.png)
 
-![Alt text](screenshots/beepboopblog6.png)
+5. **Python Script for Hidden Posts**: Used a script to search for posts with 'hidden' set as True.
 
-This script gave the flag.
+   ![Python Script](screenshots/beepboopblog6.png)
 
-![Alt text](screenshots/beepboopblog7.png)
+6. **Flag Discovery**: The script successfully uncovered the flag.
 
--------------------------------------------------------------------------------------
+   ![Flag](screenshots/beepboopblog7.png)
 
-Title: BeepBoop Cryptography
-Category: Crypto
-Points: 100
+---
 
-![Alt text](screenshots/beepboopcrypto1.png)
+## Challenge 2: BeepBoop Cryptography
 
-The challenge has given a file "BeepBoop" and says "Detected failure in challenge upload. Original author terminated. Please see attached file BeepBoop for your flag... human.". So, we know that the flag will be in the file.
+**Category**: Crypto  
+**Points**: 100
 
-Let's download the file and open it's contents with notepad.
+### Challenge Description
 
-![Alt text](screenshots/beepboopcrypto2.png)
+"Detected failure in challenge upload. Original author terminated. Please see attached file BeepBoop for your flag... human."
 
-We see that it contains the words "beep" and "boop" written multiple times. It can be binary data where "beep" is "0" and "boop" is "1", or it can be morse code too. Let's test the binary theory. On converting "beep" to "0" and "boop" to "1", we get the following:
+![BeepBoop Cryptography Challenge](screenshots/beepboopcrypto1.png)
 
-0 0 0 0 1 0 1 0 0 1 1 0 0 1 1 0 0 1 1 0 1 0 0 0 0 1 1 0 0 0 0 1 0 1 1 1 1 0 1 1 0 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 1 1 1 0 1 1 0 0 1 1 0 0 0 0 1 0 1 1 0 1 1 1 0 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 0 1 0 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 1 1 1 0 1 1 0 0 1 1 0 0 0 0 1 0 1 1 0 1 1 1 0 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 0 1 0 1 1 0 1 0 1 1 1 0 0 1 0 0 1 1 0 1 0 1 1 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 0 0 1 0 1 0 1 1 1 1 0 1 0 0 1 1 1 0 1 1 0 0 1 1 0 0 0 0 1 0 1 1 0 1 1 1 0 0 1 1 0 0 1 1 1 0 1 1 1 0 0 1 0 0 1 1 1 1 1 0 1
+### Steps Taken
 
-Now, let's input it to https://cryptii.com/ and decode it with multiple available options.
+1. **File Analysis**: Opening the file showed repetitions of the words "beep" and "boop".
 
-When decoded with ROT13, we get the flag.
+   ![BeepBoop Cryptography File](screenshots/beepboopcrypto2.png)
 
-![Alt text](screenshots/beepboopcrypto3.png)
+2. **Decoding Approach**: Interpreted as binary, with "beep" as "0" and "boop" as "1".
 
--------------------------------------------------------------------------------------
+3. **Online Decoding Tool**: Inputted binary data into https://cryptii.com/ and decoded with ROT13 to reveal the flag.
 
-Title: Hotdog Stand
-Category: Web
-Points: 100
+   ![Decoded Flag](screenshots/beepboopcrypto3.png)
 
-![Alt text](screenshots/hotdogstand1.png)
+---
 
-The link of the challenge sends us to a LogIn page, which accepts a Robot ID and an Access Code to give access.
+## Challenge 3: Hotdog Stand
 
-![Alt text](screenshots/hotdogstand2.png)
+**Category**: Web  
+**Points**: 100
 
-First objective here is to bypass this. So, lets take a look at robots.txt file for the site, as they mention robot a lot. (No harm in trying)
+### Challenge Description
 
-![Alt text](screenshots/hotdogstand3.png)
+The link of the challenge sends us to a LogIn page, which accepts a Robot ID and an Access Code.
 
-Here, we get three things - /configs, /backups, /hotdog-database/ . When I tried to access these, nothing happened for /configs and /backups, but a file got downloaded.
+![Hotdog Stand Challenge](screenshots/hotdogstand1.png)
 
-![Alt text](screenshots/hotdogstand4.png)
+### Investigation Process
 
-As the extension is ".db", I tried to view it using "https://sqliteviewer.app/".
+1. **Login Page**: Encountered a login page requiring a Robot ID and Access Code.
 
-![Alt text](screenshots/hotdogstand5.png)
+   ![Login Page](screenshots/hotdogstand2.png)
 
-On checking the credentials tab, I can see the credentials in plain text.
+2. **Exploring robots.txt**: This led to finding directories `/configs`, `/backups`, `/hotdog-database/`.
 
-![Alt text](screenshots/hotdogstand6.png)
+   ![robots.txt File](screenshots/hotdogstand3.png)
 
-Username: hotdogstand
-Password: slicedpicklesandonions
-Role: admin
+3. **Accessing Directories**: A file was downloaded from `/hotdog-database/`.
 
-Let us use these credentials to log in.
+   ![Database File Download](screenshots/hotdogstand4.png)
 
-![Alt text](screenshots/hotdogstand7.png)
+4. **Database Analysis**: Examined the database using "https://sqliteviewer.app/", revealing plain-text credentials.
 
-I was able to log in successfully and got the flag.
+   ![Database Credentials](screenshots/hotdogstand5.png)
 
-![Alt text](screenshots/hotdogstand8.png)
+5. **Using the Credentials**: Logged in with the found credentials to access and reveal the flag.
+
+   ![Login Success](screenshots/hotdogstand6.png)
+
+   ![Flag](screenshots/hotdogstand8.png)
+
+---
+
